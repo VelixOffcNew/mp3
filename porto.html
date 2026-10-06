@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Geza — Developer Portfolio</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  
+  body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background: #08080c;
+    color: #fff;
+    min-height: 100vh;
+    padding: 30px 20px 60px;
+    overflow-x: hidden;
+    background-image: 
+      radial-gradient(circle at 12% 8%, rgba(99, 102, 241, 0.18), transparent 45%),
+      radial-gradient(circle at 88% 92%, rgba(236, 72, 153, 0.14), transparent 45%),
+      radial-gradient(circle at 50% 50%, rgba(34, 211, 238, 0.06), transparent 60%);
+  }
+
+  /* Grid pattern overlay */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: 
+      linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+    mask-image: radial-gradient(ellipse at center, black 40%, transparent 80%);
+  }
+
+  /* Logo */
+  .logo-wrap {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 12px;
+    position: relative;
+    z-index: 2;
+    animation: fadeDown 0.8s ease;
+  }
+  .logo {
+    width: 110px;
+    height: 110px;
+    border-radius: 26px;
+    object-fit: cover;
+    border: 2px solid rgba(255,255,255,0.1);
+    box-shadow: 
+      0 0 60px rgba(120, 80, 255, 0.55),
+      0 0 0 8px rgba(255,255,255,0.03);
+    transition: transform 0.4s ease;
+  }
+  .logo:hover { transform: scale(1.06) rotate(-4deg); }
+
+  .brand-name {
+    text-align: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    color: rgba(255,255,255,0.5);
+    margin-bottom: 40px;
+    position: relative;
+    z-index: 2;
+    letter-spacing: 1px;
+  }
+  .brand-name::before { content: '< '; color: #a78bfa; }
+  .brand-name::after  { content: ' />'; color: #a78bfa; }
+
+  /* Grid */
+  .bento {
+    max-width: 1150px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    grid-auto-rows: minmax(120px, auto);
+    gap: 16px;
+    position: relative;
+    z-index: 2;
+  }
+
+  .box {
+    background: rgba(255,255,255,0.035);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 22px;
+    padding: 24px;
+    position: relative;
+    overflow: hidden;
+    backdrop-filter: blur(12px);
+    transition: all 0.35s cubic-bezier(.2,.7,.3,1);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    animation: fadeUp 0.7s ease backwards;
+  }
+  .box:hover {
+    background: rgba(255,255,255,0.06);
+    border-color: rgba(167,139,250,0.35);
+    transform: translateY(-4px);
+    box-shadow: 0 20px 40px -20px rgba(120,80,255,0.4);
+  }
+
+  .box::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 22px;
+    padding: 1px;
+    background: linear-gradient(135deg, rgba(255,255,255,0.18), transparent 40%);
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+  }
+
+  /* Grid placements */
+  .hero   { grid-column: span 4; grid-row: span 2; background: linear-gradient(135deg, rgba(99,102,241,0.16), rgba(236,72,153,0.07)); }
+  .yt     { grid-column: span 2; grid-row: span 1; cursor: pointer; }
+  .tg     { grid-column: span 2; grid-row: span 1; cursor: pointer; }
+  .stack  { grid-column: span 3; grid-row: span 2; }
+  .lang   { grid-column: span 3; grid-row: span 2; }
+  .stat   { grid-column: span 2; grid-row: span 1; align-items: center; justify-content: center; text-align: center; }
+  .terminal { grid-column: span 6; grid-row: span 2; background: linear-gradient(135deg, rgba(0,0,0,0.6), rgba(30,20,60,0.4)); font-family: 'JetBrains Mono', monospace; }
+
+  /* Text */
+  .label {
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.45);
+    font-weight: 600;
+  }
+
+  h1 {
+    font-size: clamp(30px, 4.5vw, 48px);
+    font-weight: 800;
+    line-height: 1.05;
+    background: linear-gradient(120deg, #fff 30%, #a78bfa 70%, #f472b6);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin: 10px 0;
+    letter-spacing: -1px;
+  }
+
+  .sub { color: rgba(255,255,255,0.62); font-size: 15px; line-height: 1.65; }
+
+  .tag {
+    display: inline-block;
+    padding: 6px 12px;
+    border-radius: 999px;
+    background: rgba(167,139,250,0.1);
+    border: 1px solid rgba(167,139,250,0.25);
+    font-size: 11.5px;
+    color: #c4b5fd;
+    margin: 4px 4px 0 0;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .stat-num {
+    font-size: 34px;
+    font-weight: 800;
+    font-family: 'JetBrains Mono', monospace;
+    background: linear-gradient(120deg, #a78bfa, #f472b6);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    line-height: 1;
+  }
+
+  /* Social cards */
+  .social a {
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    justify-content: space-between;
+  }
+  .social .icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    transition: transform 0.3s;
+  }
+  .yt { background: linear-gradient(135deg, rgba(255,0,0,0.12), rgba(255,0,0,0.02)); }
+  .tg { background: linear-gradient(135deg, rgba(0,150,255,0.12), rgba(0,150,255,0.02)); }
+  .yt .icon { background: rgba(255,0,0,0.18); color: #ff5c5c; }
+  .tg .icon { background: rgba(0,150,255,0.18); color: #5cb8ff; }
+  .social:hover .icon { transform: scale(1.1) rotate(-6deg); }
+
+  .social .arrow {
+    align-self: flex-end;
+    font-size: 18px;
+    opacity: 0.5;
+    transition: transform 0.3s;
+    position: absolute;
+    top: 20px;
+    right: 22px;
+  }
+  .social:hover .arrow { transform: translate(4px, -4px); opacity: 1; }
+
+  .social-name { font-weight: 700; font-size: 15px; margin-top: 14px; }
+  .social-handle { font-size: 12px; color: rgba(255,255,255,0.5); font-family: 'JetBrains Mono', monospace; }
+
+  /* Stack items */
+  .stack-list { display: flex; flex-direction: column; gap: 12px; margin-top: 14px; }
+  .stack-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 12px;
+    border-radius: 12px;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.06);
+    transition: all 0.25s;
+  }
+  .stack-item:hover { background: rgba(167,139,250,0.08); border-color: rgba(167,139,250,0.25); }
+  .stack-dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .stack-item .name { font-size: 13.5px; font-weight: 600; }
+  .stack-item .desc { font-size: 11px; color: rgba(255,255,255,0.4); font-family: 'JetBrains Mono', monospace; }
+
+  /* Terminal */
+  .terminal .term-head {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+  .term-head .dot { width: 12px; height: 12px; border-radius: 50%; }
+  .dot.r { background: #ff5f56; }
+  .dot.y { background: #ffbd2e; }
+  .dot.g { background: #27c93f; }
+  .term-head .title { margin-left: 10px; font-size: 12px; color: rgba(255,255,255,0.4); }
+
+  .term-body {
+    font-size: 13px;
+    line-height: 1.9;
+    color: #c4b5fd;
+  }
+  .term-body .prompt { color: #27c93f; }
+  .term-body .cmd { color: #fff; }
+  .term-body .out { color: rgba(255,255,255,0.55); }
+  .term-body .cursor {
+    display: inline-block;
+    width: 8px; height: 14px;
+    background: #a78bfa;
+    animation: blink 1s infinite;
+    vertical-align: middle;
+    margin-left: 2px;
+  }
+  @keyframes blink { 50% { opacity: 0; } }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeDown {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .box:nth-child(1) { animation-delay: 0.05s; }
+  .box:nth-child(2) { animation-delay: 0.1s; }
+  .box:nth-child(3) { animation-delay: 0.15s; }
+  .box:nth-child(4) { animation-delay: 0.2s; }
+  .box:nth-child(5) { animation-delay: 0.25s; }
+  .box:nth-child(6) { animation-delay: 0.3s; }
+  .box:nth-child(7) { animation-delay: 0.35s; }
+  .box:nth-child(8) { animation-delay: 0.4s; }
+
+  /* Responsive */
+  @media (max-width: 900px) {
+    .bento { grid-template-columns: repeat(4, 1fr); }
+    .hero, .stack, .lang, .terminal { grid-column: span 4; grid-row: span 1; }
+    .yt, .tg { grid-column: span 2; }
+    .stat { grid-column: span 2; }
+  }
+  @media (max-width: 560px) {
+    .bento { grid-template-columns: repeat(2, 1fr); }
+    .hero, .stack, .lang, .terminal { grid-column: span 2; }
+    .yt, .tg, .stat { grid-column: span 2; }
+    body { padding: 20px 14px 40px; }
+    .box { padding: 20px; border-radius: 18px; }
+    .logo { width: 90px; height: 90px; }
+  }
+</style>
+</head>
+<body>
+
+  <div class="logo-wrap">
+    <img src="https://i.pinimg.com/736x/0c/5a/f6/0c5af66429e62614073e14c4286eca2b.jpg" alt="Logo" class="logo">
+  </div>
+  <div class="brand-name">Dev Ganteng</div>
+
+  <div class="bento">
+
+    <!-- HERO -->
+    <div class="box hero">
+      <div class="label">✦ Full Stack Developer</div>
+      <div>
+        <h1>Hi, I'm Gezastecu.</h1>
+        <p class="sub">
+          Developer yang fokus bikin <b style="color:#a78bfa">Web</b>, 
+          <b style="color:#60a5fa">Flutter</b>, dan 
+          <b style="color:#f472b6">Native App</b>. 
+          Paham logika & algoritma, dan memanfaatkan AI sebagai 
+          <i>co-pilot</i> buat ngebut development 🚀
+        </p>
+      </div>
+      <div>
+        <span class="tag">Web Dev</span>
+        <span class="tag">Flutter</span>
+        <span class="tag">Native</span>
+        <span class="tag">AI-Assisted</span>
+      </div>
+    </div>
+
+    <!-- YOUTUBE -->
+    <div class="box social yt">
+      <a href="https://youtube.com/@Geyzawhy" target="_blank">
+        <div class="arrow">↗</div>
+        <div class="icon">▶</div>
+        <div>
+          <div class="social-name">YouTube</div>
+          <div class="social-handle">@Geyzawhy</div>
+        </div>
+      </a>
+    </div>
+
+    <!-- TELEGRAM -->
+    <div class="box social tg">
+      <a href="https://t.me/Gezastecu" target="_blank">
+        <div class="arrow">↗</div>
+        <div class="icon">✈</div>
+        <div>
+          <div class="social-name">Telegram</div>
+          <div class="social-handle">@Gezastecu</div>
+        </div>
+      </a>
+    </div>
+
+    <!-- TECH STACK -->
+    <div class="box stack">
+      <div class="label">✦ Tech Stack</div>
+      <div class="stack-list">
+        <div class="stack-item">
+          <div class="stack-dot" style="background:#61dafb; box-shadow:0 0 10px #61dafb;"></div>
+          <div>
+            <div class="name">Web Development</div>
+            <div class="desc">HTML • CSS • JS • React • Node</div>
+          </div>
+        </div>
+        <div class="stack-item">
+          <div class="stack-dot" style="background:#42a5f5; box-shadow:0 0 10px #42a5f5;"></div>
+          <div>
+            <div class="name">Flutter</div>
+            <div class="desc">Dart • Cross-platform • Material</div>
+          </div>
+        </div>
+        <div class="stack-item">
+          <div class="stack-dot" style="background:#a78bfa; box-shadow:0 0 10px #a78bfa;"></div>
+          <div>
+            <div class="name">Native App</div>
+            <div class="desc">Android • iOS • Performance-first</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- LANGUAGES -->
+    <div class="box lang">
+      <div class="label">✦ Languages & Logic</div>
+      <div class="stack-list">
+        <div class="stack-item">
+          <div class="stack-dot" style="background:#f7df1e; box-shadow:0 0 10px #f7df1e;"></div>
+          <div>
+            <div class="name">JavaScript / TypeScript</div>
+            <div class="desc">Frontend & Backend Logic</div>
+          </div>
+        </div>
+        <div class="stack-item">
+          <div class="stack-dot" style="background:#00d1b2; box-shadow:0 0 10px #00d1b2;"></div>
+          <div>
+            <div class="name">Dart</div>
+            <div class="desc">Flutter Ecosystem</div>
+          </div>
+        </div>
+        <div class="stack-item">
+          <div class="stack-dot" style="background:#ff7043; box-shadow:0 0 10px #ff7043;"></div>
+          <div>
+            <div class="name">Kotlin / Java</div>
+            <div class="desc">Android Native</div>
+          </div>
+        </div>
+        <div class="stack-item">
+          <div class="stack-dot" style="background:#ffd43b; box-shadow:0 0 10px #ffd43b;"></div>
+          <div>
+            <div class="name">Python</div>
+            <div class="desc">Scripting • AI • Automation</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STAT 1 -->
+    <div class="box stat">
+      <div class="stat-num">&lt;/&gt;</div>
+      <div class="label" style="margin-top:10px;">Clean Code</div>
+    </div>
+
+    <!-- STAT 2 -->
+    <div class="box stat">
+      <div class="stat-num">AI+</div>
+      <div class="label" style="margin-top:10px;">Assisted Dev</div>
+    </div>
+
+    <!-- STAT 3 -->
+    <div class="box stat">
+      <div class="stat-num">∞</div>
+      <div class="label" style="margin-top:10px;">Ideas</div>
+    </div>
+
+    <!-- TERMINAL -->
+    <div class="box terminal">
+      <div class="term-head">
+        <div class="dot r"></div>
+        <div class="dot y"></div>
+        <div class="dot g"></div>
+        <div class="title">~/geza — zsh</div>
+      </div>
+      <div class="term-body">
+        <div><span class="prompt">➜</span> <span class="cmd">whoami</span></div>
+        <div class="out">→ Full-Stack Developer &amp; Logic Enthusiast</div>
+        <div><span class="prompt">➜</span> <span class="cmd">cat philosophy.txt</span></div>
+        <div class="out">→ "Pahami logikanya dulu, sisanya AI bantu eksekusi."</div>
+        <div><span class="prompt">➜</span> <span class="cmd">stack --list</span></div>
+        <div class="out">→ web · flutter · native · ai-assisted</div>
+        <div><span class="prompt">➜</span> <span class="cmd">./build_future</span><span class="cursor"></span></div>
+      </div>
+    </div>
+
+  </div>
+
+</body>
+</html>
